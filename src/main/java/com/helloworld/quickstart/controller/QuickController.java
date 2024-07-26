@@ -2,12 +2,18 @@ package com.helloworld.quickstart.controller;
 
 import com.helloworld.quickstart.dto.ItemDto;
 import com.helloworld.quickstart.dto.ResponseDto;
+import com.helloworld.quickstart.service.QuickService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j
 public class QuickController {
+
+    @Autowired
+    private QuickService quickService;
+
     @GetMapping("/dummy")
     public String dummy() {
         log.info("dummy");
@@ -32,8 +38,14 @@ public class QuickController {
     @PostMapping("/item")
     public ResponseDto registerItem(@RequestBody ItemDto item) {
         log.info("item: {}", item);
+
+        boolean b = quickService.registerItem(item);
         ResponseDto responseDto = new ResponseDto();
-        responseDto.setMessage("ok");
+        if (b) {
+            responseDto.setMessage("ok");
+        } else {
+            responseDto.setMessage("fail");
+        }
         return responseDto;
     }
 }
